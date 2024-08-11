@@ -1,0 +1,213 @@
+<style>
+    #post-calendar {
+        width: 100%;
+        height: 225px;
+        margin-top: 20px;
+        border-radius: 12px;
+        /* background-color: rgba(255, 255, 255, 0.26); */
+        background-color: var(--color-block);
+    }
+    #aaaaaaaaa {
+        width: 100%;
+        height: 225px;
+        margin-top: 20px;
+        border-radius: 12px;
+        background-color: var(--color-block);
+        padding: 60px 0;
+        /* border: 3px solid green; */
+        text-align: center;
+        /* font-size:30px; */
+    }
+
+    #buttonsty {
+    border: none;
+    color: white;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    border-radius: 8px;
+    background-color: #00bfffdc; 
+    color: black; 
+    border: 2px solid #008CBA;
+    }
+
+    #buttonsty:hover {
+    background-color: #00bfff;
+    color: white;
+    }
+
+</style>
+<script src="https://assets.buasis.eu.org/js/echarts.min.js"></script>
+<script src="https://assets.buasis.eu.org/js/mobile-detect.js"></script>
+
+<div id="chart">
+    <div id="aaaaaaaaa"><div id="aaa"><center><p>正在加载文章日历...</p></center></div></div>
+</div>
+
+<script type="text/javascript">
+
+        // 获取 CSS 变量的值
+    function getCSSVariableValue(variableName) {
+        return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
+        }
+
+        // 使用示例
+    var colorP = getCSSVariableValue('--color-p');
+
+    function loadchart() {
+        let myChart = echarts.init(document.getElementById('post-calendar'));
+
+        <% 
+        var startDate = moment().subtract(1, 'years').startOf('day');
+        var endDate = moment().startOf('day');
+        var rangeArr = '["' + startDate.format('YYYY-MM-DD') + '", "' + endDate.format('YYYY-MM-DD') + '"]';
+
+        var dateMap = new Map();
+        site.posts.forEach(function (post) {
+            var date = moment(post.date).format('YYYY-MM-DD');
+            var count = dateMap.get(date);
+            dateMap.set(date, count == null || count == undefined ? 1 : count + 1);
+        });
+
+        var datePosts = [];
+        for (var time = startDate; time.isSameOrBefore(endDate); time.add(1, 'days')) {
+            var date = time.format('YYYY-MM-DD');
+            datePosts.push([date, dateMap.has(date) ? dateMap.get(date) : 0]);
+        }
+        %>
+
+        let option = {
+            title: {
+                top: 0,
+                text: '文章日历',
+                left: 'center',
+                textStyle: {
+                    color: colorP
+                }
+            },
+            tooltip: {
+                padding: 10,
+                backgroundColor: '#555',
+                borderColor: '#777',
+                borderWidth: 1,
+                formatter: function (obj) {
+                    var value = obj.value;
+                    return '<div style="font-size: 14px;">' + value[0] + '：' + value[1] + '</div>';
+                }
+            },
+            visualMap: {
+                show: true,
+                showLabel: true,
+                categories: [0, 1, 2, 3, 4],
+                calculable: true,
+                inRange: {
+                    symbol: 'rect',
+                    color: ['#ebedf0', '#c6e48b', '#7bc96f', '#239a3b', '#196127']
+                },
+                itemWidth: 12,
+                itemHeight: 12,
+                orient: 'horizontal',
+                left: 'center',
+                bottom: 0,
+                textStyle: {
+                    color: colorP
+                }
+            },
+            calendar: [{
+                right: 30,
+                left: 30,
+                range: <%- rangeArr %>,
+                cellSize: [13, 13],
+                splitLine: {
+                    show: false
+                },
+                itemStyle: {
+                    width: '1.88679%',
+                    height: '15px',
+                    color: '#EEEEEE',
+                    borderColor: '#FFF',
+                    borderWidth: 2
+                },
+                yearLabel: {
+                    show: false
+                },
+                monthLabel: {
+                    nameMap: 'cn',
+                    fontWeight: 'lighter',
+                    fontSize: 12,
+                    textStyle: {
+                        color: colorP
+                    }
+                },
+                dayLabel: {
+                    show: true,
+                    formatter: '{start}  1st',
+                    fontWeight: 'lighter',
+                    nameMap: ['日', ' ', ' ', '三', ' ', ' ', '六'],
+                    fontSize: 12,
+                    textStyle: {
+                        color: colorP
+                    }
+                }
+            }],
+            series: [{
+                type: 'heatmap',
+                coordinateSystem: 'calendar',
+                calendarIndex: 0,
+                data: <%- JSON.stringify(datePosts) %>
+            }]
+        };
+
+        myChart.setOption(option);
+    }
+
+    function loadcharthtml() {
+        document.getElementById("chart").innerHTML = '<div class="container archive-calendar"><div class="card"><div id="post-calendar" class="card-content"></div></div></div>';
+    }
+
+    function chart() {
+        loadcharthtml();
+        loadchart();
+    }
+
+    
+    // window.onload = choosechart;
+
+    // document.addEventListener("pjax:complete", function() {
+    //     choosechart();
+    // });
+</script>
+<script type="text/javascript">
+function choosechart() {
+    var md = new MobileDetect(window.navigator.userAgent);
+    console.log("choosechart")
+    if (!md.phone()) {
+        chart();
+    }
+    else {
+        document.getElementById("aaa").innerHTML = '<center><p>移动设备默认不加载文章日历</p></center><br /><buttonsty id="buttonsty" onclick="chart()">加载文章日历</button>';
+    }
+}
+</script>
+
+<script>
+    // 创建一个脚本标签来加载echarts.min.js
+    var script1 = document.createElement('script');
+    script1.src = 'https://assets.buasis.eu.org/js/echarts.min.js';
+    script1.onload = function() {
+        // 当第一个脚本加载完后，再加载第二个脚本
+        var script2 = document.createElement('script');
+        script2.src = 'https://assets.buasis.eu.org/js/mobile-detect.js';
+        script2.onload = function() {
+            // 当第二个脚本加载完后，运行opop()函数
+            choosechart();
+        };
+        document.head.appendChild(script2);
+    };
+    document.head.appendChild(script1);
+</script>

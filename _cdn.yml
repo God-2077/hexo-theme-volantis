@@ -319,10 +319,10 @@ gitalk:
 twikoo:
   name: twikoo
   file: dist/twikoo.min.js
-  version: 1.6.7
+  version: 1.6.36
   npm: true
   static: false
-  cdnjs: true
+  cdnjs: false
 waline_css:
   name: "@waline/client"
   cdnjs_name: waline
