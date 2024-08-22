@@ -9,11 +9,6 @@
     let path = pdata.commentPath;
     let placeholder = pdata.commentPlaceholder || "<%= theme.comments.twikoo.placeholder %>" || "";
     if (path.length == 0) {
-    iziToast.show({
-        title: 'run',
-        timeout: false,
-        position: 'center'
-    });
         let defaultPath = '<%= theme.comments.twikoo.path %>';
         // 适配安装 hexo-offline 插件前的 path
         // 获取当前路径并去掉 'index.html' 后缀
@@ -23,31 +18,6 @@
         }
         path = defaultPath || currentPath;
     }
-    iziToast.show({
-        title: 'pdata.commentPath',
-        message: pdata.commentPath,
-        timeout: false,
-        position: 'center'
-    });
-iziToast.show({
-        title: 'defaultPath',
-        message: defaultPath,
-        timeout: false,
-        position: 'center'
-    });
-iziToast.show({
-        title: 'currentPath',
-        message: currentPath,
-        timeout: false,
-        position: 'center'
-    });
-iziToast.show({
-        title: 'path',
-        message: path,
-        timeout: false,
-        position: 'center'
-    });
-
     twikoo.init(Object.assign(Object.assign(<%- JSON.stringify(theme.comments.twikoo) %>, {
       el: '#twikoo_container',
       path: path,
