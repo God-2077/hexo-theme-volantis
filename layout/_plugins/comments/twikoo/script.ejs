@@ -9,8 +9,14 @@
     let path = pdata.commentPath;
     let placeholder = pdata.commentPlaceholder || "<%= theme.comments.twikoo.placeholder %>" || "";
     if (path.length == 0) {
-      let defaultPath = '<%= theme.comments.twikoo.path %>';
-      path = defaultPath || decodeURI(window.location.pathname);
+        let defaultPath = '<%= theme.comments.twikoo.path %>';
+        // 适配安装 hexo-offline 插件前的 path
+        // 获取当前路径并去掉 'index.html' 后缀
+        let currentPath = decodeURI(window.location.pathname);
+        if (currentPath.endsWith('index.html')) {
+            currentPath = currentPath.replace(/index\.html$/, '');
+        }
+        path = defaultPath || currentPath;
     }
     twikoo.init(Object.assign(Object.assign(<%- JSON.stringify(theme.comments.twikoo) %>, {
       el: '#twikoo_container',
