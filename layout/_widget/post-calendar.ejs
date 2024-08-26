@@ -43,7 +43,7 @@
 
 </style>
 <script src="https://assets.buasis.eu.org/js/echarts.min.js"></script>
-<script src="https://assets.buasis.eu.org/js/mobile-detect.js"></script>
+<script src="https://assets.buasis.eu.org/js/mobile-detect.min.js"></script>
 
 <div id="chart">
     <div id="aaaaaaaaa"><div id="aaa"><center><p>正在加载文章日历...</p></center></div></div>
@@ -185,7 +185,7 @@
 <script type="text/javascript">
 function choosechart() {
     var md = new MobileDetect(window.navigator.userAgent);
-    console.log("choosechart")
+    // console.log("choosechart")
     if (!md.phone()) {
         chart();
     }
@@ -202,7 +202,7 @@ function choosechart() {
     script1.onload = function() {
         // 当第一个脚本加载完后，再加载第二个脚本
         var script2 = document.createElement('script');
-        script2.src = 'https://assets.buasis.eu.org/js/mobile-detect.js';
+        script2.src = 'https://assets.buasis.eu.org/js/mobile-detect.min.js';
         script2.onload = function() {
             // 当第二个脚本加载完后，运行opop()函数
             choosechart();
